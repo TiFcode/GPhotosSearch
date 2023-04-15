@@ -20,7 +20,7 @@ public class Program
         try
         {
             IInputOutputHandler inputOutputHandler = new ConsoleInputOutputHandler();
-            inputOutputHandler.WriteOutput("START PROGRAM.");
+            inputOutputHandler.WriteOutput("[START PROGRAM]");
 
             var configuration = new ConfigurationBuilder()
                 .AddUserSecrets<Program>()
@@ -37,9 +37,12 @@ public class Program
             inputOutputHandler.WriteOutput("Enter search text: ");
             string searchText = inputOutputHandler.ReadInput();
 
+            inputOutputHandler.WriteOutput("[START AUTHENTICATION]");
             IAuthenticator authenticator = new GoogleAuthenticator(clientId, clientSecret);
             UserCredential credential = await authenticator.AuthenticateAsync();
+            inputOutputHandler.WriteOutput("[END AUTHENTICATION]");
 
+            inputOutputHandler.WriteOutput("[START SEARCH]");
             IHttpClientFactory httpClientFactory = new DefaultHttpClientFactory();
             var googlePhotosService =
                 new GooglePhotosService(
@@ -47,15 +50,16 @@ public class Program
                     httpClientFactory,
                     inputOutputHandler);
             var results = await googlePhotosService.SearchPhotosAsync(searchText);
+            inputOutputHandler.WriteOutput("[END SEARCH]");
 
             inputOutputHandler.WriteOutput($"Found {results.Count} results:");
             inputOutputHandler.WriteOutput(results);
-            inputOutputHandler.WriteOutput("END PROGRAM.");
+            inputOutputHandler.WriteOutput("[END PROGRAM]");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-            Console.WriteLine("END PROGRAM.");
+            Console.WriteLine("[END PROGRAM]");
         }
     }
 }

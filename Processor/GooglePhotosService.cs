@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using Google.Apis.Auth.OAuth2;
 using GPhotosSearch.Dependencies;
@@ -26,14 +27,25 @@ namespace GPhotosSearch.Processor
 
         public async Task<IList<MediaItem>> SearchPhotosAsync(string searchText)
         {
-            using var httpClient = _httpClientFactory.Create();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _credential.Token.AccessToken);
-
-            var requestUri = Constants.CONST_URL_GoogleAPI_Photos_Search + $"{Uri.EscapeDataString(searchText)}";
-            _inputOutputHandler.WriteOutput($"Request URL = [{requestUri}]");
             try
             {
-                var response = await httpClient.GetAsync(requestUri);
+                using var httpClient = _httpClientFactory.Create();
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _credential.Token.AccessToken);
+
+                var requestUri = Constants.CONST_URL_GoogleAPI_Photos_Search;
+
+                var requestBody = new
+                {
+                    pageSize = 100,
+                    filters = new
+                    {
+                        text = searchText
+                    }
+                };
+
+                var requestContent = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json");
+
+                var response = await httpClient.PostAsync(requestUri, requestContent);
 
                 if (!response.IsSuccessStatusCode)
                 {
