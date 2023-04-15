@@ -1,0 +1,72 @@
+﻿using System.Net.Http.Headers;
+using System.Text.Json;
+using Google.Apis.Auth.OAuth2;
+using GPhotosSearch.Dependencies;
+using GPhotosSearch.Dependencies.HttpClientService;
+using GPhotosSearch.Dependencies.Models;
+using GPhotosSearch.Dependencies.UserInputOutput;
+
+namespace GPhotosSearch.Processor
+{
+    internal class GooglePhotosService
+    {
+        private readonly UserCredential _credential;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IInputOutputHandler _inputOutputHandler;
+
+        public GooglePhotosService(
+            UserCredential credential,
+            IHttpClientFactory httpClientFactory,
+            IInputOutputHandler inputOutputHandler)
+        {
+            _credential = credential;
+            _httpClientFactory = httpClientFactory;
+            _inputOutputHandler = inputOutputHandler;
+        }
+
+        public async Task<IList<MediaItem>> SearchPhotosAsync(string searchText)
+        {
+            using var httpClient = _httpClientFactory.Create();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _credential.Token.AccessToken);
+
+            var requestUri = Constants.CONST_URL_GoogleAPI_Photos_Search + $"{Uri.EscapeDataString(searchText)}";
+            _inputOutputHandler.WriteOutput($"Request URL = [{requestUri}]");
+            try
+            {
+                var response = await httpClient.GetAsync(requestUri);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _inputOutputHandler.WriteOutput($"Error: {response.StatusCode}");
+                    return new List<MediaItem>();
+                }
+
+                var responseJson = await response.Content.ReadAsStringAsync();
+                var responseDocument = JsonDocument.Parse(responseJson);
+
+                var mediaItems = new List<MediaItem>();
+                foreach (var item in responseDocument.RootElement.GetProperty("mediaItems").EnumerateArray())
+                {
+                    mediaItems.Add(new MediaItem
+                    {
+                        Id = item.GetProperty("id").GetString(),
+                        Filename = item.GetProperty("filename").GetString(),
+                        MimeType = item.GetProperty("mimeType").GetString()
+                    });
+                }
+
+                return mediaItems;
+            }
+            catch (HttpRequestException ex)
+            {
+                _inputOutputHandler.WriteOutput($"Request exception: [{ex}]");
+                return new List<MediaItem>();
+            }
+            catch (Exception ex)
+            {
+                _inputOutputHandler.WriteOutput($"An unexpected exception occurred: [{ex}]");
+                return new List<MediaItem>();
+            }
+        }
+    }
+}
