@@ -44,11 +44,7 @@ public class Program
 
             inputOutputHandler.WriteOutput("[START SEARCH]");
             IHttpClientFactory httpClientFactory = new DefaultHttpClientFactory();
-            var googlePhotosService =
-                new GooglePhotosService(
-                    credential,
-                    httpClientFactory,
-                    inputOutputHandler);
+            var googlePhotosService = new GooglePhotosService(credential, httpClientFactory, inputOutputHandler);
             var results = await googlePhotosService.SearchPhotosAsync(searchText);
             inputOutputHandler.WriteOutput("[END SEARCH]");
 

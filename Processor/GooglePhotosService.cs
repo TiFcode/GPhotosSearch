@@ -31,6 +31,8 @@ namespace GPhotosSearch.Processor
             {
                 using var httpClient = _httpClientFactory.Create();
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _credential.Token.AccessToken);
+                _inputOutputHandler.WriteOutput($"[INFO] _credential.Token.IssuedUtc == [{_credential.Token.IssuedUtc}]");
+                _inputOutputHandler.WriteOutput($"[INFO] _credential.Token.ExpiresInSeconds == [{_credential.Token.ExpiresInSeconds}]");
 
                 var requestUri = Constants.CONST_URL_GoogleAPI_Photos_Search;
 
