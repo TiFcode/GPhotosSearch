@@ -39,7 +39,10 @@ namespace GPhotosSearch.Processor
                     pageSize = 100,
                     filters = new
                     {
-                        text = searchText
+                        contentFilter = new
+                        {
+                            includedContentCategories = new[] { searchText } // "ANIMALS", "CITYSCAPES", "LANDMARKS", "RECEIPTS", "SPORT", "WEDDINGS"
+                        }
                     }
                 };
 
