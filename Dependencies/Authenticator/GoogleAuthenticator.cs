@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GPhotosSearch.Dependencies.Authenticator
 {
-    internal class GoogleAuthenticator : IAuthenticator
+    public class GoogleAuthenticator : IAuthenticator
     {
         private readonly string _clientId;
         private readonly string _clientSecret;

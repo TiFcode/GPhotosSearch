@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GPhotosSearch.Dependencies.Models
 {
-    internal class MediaItem
+    public class MediaItem
     {
         public string Id { get; set; }
         public string Filename { get; set; }

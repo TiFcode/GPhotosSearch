@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GPhotosSearch.Dependencies.HttpClientService
 {
-    internal interface IHttpClientFactory
+    public interface IHttpClientFactory
     {
         HttpClient Create();
     }

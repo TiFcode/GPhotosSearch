@@ -9,7 +9,7 @@ using GPhotosSearch.Dependencies.UserInputOutput;
 
 namespace GPhotosSearch.Processor
 {
-    internal class GooglePhotosService
+    public class GooglePhotosService
     {
         private readonly UserCredential _credential;
         private readonly IHttpClientFactory _httpClientFactory;

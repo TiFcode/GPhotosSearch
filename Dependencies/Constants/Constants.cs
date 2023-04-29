@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GPhotosSearch.Dependencies
 {
-    internal class Constants
+    public class Constants
     {
         public const string CONST_URL_GoogleAPI_Auth_Photos_ReadOnly = "https://www.googleapis.com/auth/photoslibrary.readonly";
         public const string CONST_URL_GoogleAPI_Photos_Search = $"https://photoslibrary.googleapis.com/v1/mediaItems:search";

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GPhotosSearch.Dependencies.Authenticator
 {
-    internal interface IAuthenticator
+    public interface IAuthenticator
     {
         Task<UserCredential> AuthenticateAsync();
     }

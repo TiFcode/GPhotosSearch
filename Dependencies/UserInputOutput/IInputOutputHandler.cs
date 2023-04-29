@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GPhotosSearch.Dependencies.UserInputOutput
 {
-    internal interface IInputOutputHandler
+    public interface IInputOutputHandler
     {
         string ReadInput();
         void WriteOutput(string message);
